@@ -1,0 +1,37 @@
+Structuring the text file:
+All source files have to be utf-8 txt files
+All sources files need to be named <year>.txt
+All days have to be seperated by at least 2 spaces!
+All date + verse lines need to be on two seperat lines (date - verse \n verse; verse; verse)
+All named date + verse lines need to be on two seperate lines (name date + verse \n verse, verse, verse)
+If a verse has additional chapters or verses it should always be seperated by a command
+
+
+
+Structuring the JSON file:
+<year>.JSON
+{<day number>: {
+                "line1" : [<className(for css)>, <item1>, <item1>, ect],
+                "line2" : [<className(for css)>, <item1>, <item1>, ect],
+                "line3" : [<className(for css)>, <item1>, <item1>, ect],
+                }
+},
+
+Example:
+    2021.JSON
+    {"1" : {
+        "line1" : {"title", "John Hus Festival"},
+        "line2" : {"day", "Daily Text - Tuesday, July 6"},
+        "line3" : {"heading" : "Daily Scripture Lessions"},
+        "line4" : {"links" : ["Psalm 81:11-16", "Isaiah 24,25", "Ephesians 3:14,4:6"], // Will use a function to make these links
+        "line5" : {"heading" : "John Hus Festival"},
+        "line6" : {"links" : ["Isaiah 49:1-7", "Psalm 135:1-13"]}, // Will use a function to make these links
+        "line7" : {"heading" : "Watchword For the Day"},
+        "line8" : {"text" : "Seek the welfare of the city, and pray to the Lord on its behalf, for in its welfare you will find your welfare. Jeremiah 29:7"},
+        "line9" : {"heading" : "Doctrinal Text"},
+        "line10" : {"text" : "You are the salt of the earth. Matthew 5:13"},
+        "line11" : {"heading" : "Prayer"},
+        "line12" : {"text" : "Holy God, we thank you for the dedication of John Hus and his willingness to sacrifice even his life for the sake of truth. We thank you for his dedicated followers, who later formed the Moravian Church. Thanks be to God! Amen."}
+    },
+    "2" : { ect...},
+    }
