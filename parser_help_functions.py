@@ -5,10 +5,10 @@ class SourceData:
         self.source_file = source_file
         self.length_of_year = 0
         self.year_data = []
+        self.year_data_lines = []
         self.day_verse_list = []
         self.last_three_lines = []
         self.ending_info = []
-        self.temp_list = []
         self.total_entries_ok = True
         self.day_of_the_week_list = ['Monday', 'Tuesday', 'Wednesday', 
                                     'Thursday', 'Friday', 'Saturday', 
@@ -39,7 +39,6 @@ class SourceData:
                                     'Philemon', 'Hebrews', 'James', '1 Peter', 
                                     '2 Peter', '1 John', '2 John', '3 John', 
                                     'Jude', 'Revelation']
-        self.start_line = self.find_file_start()
         self.update_year_data()
         self.new_year_dict = self.create_new_year_dict()
 
@@ -74,7 +73,7 @@ class SourceData:
             return num_of_items_found
 
 
-    def parse_files_by_day(self):
+    def parse_file_into_days(self):
         '''
         Takes a self.source_file and line to start looking on (skip to) and 
         returns a list of lists where each element is a line from the file. 
@@ -83,7 +82,7 @@ class SourceData:
             day_entry_list = []
             self.year_data = []
             blank_lines = 0
-            for line in current_file.readlines()[self.start_line:]:
+            for line in current_file.readlines()[self.find_file_start():]:
                 if len(line) > 5:
                     day_entry_list.append(line.replace("\n", "").replace("\t", ""))
                     blank_lines = 0
@@ -120,7 +119,9 @@ class SourceData:
         the number of day entries for the year matches the expected value 
         (365 or 366). Returns True or False depending on the check.
         '''
-        self.parse_files_by_day()
+        self.parse_file_into_days()
+        for day in self.year_data:
+            self.year_data_lines.append(self.parse_day_to_line(day))
         self.check_parsed_data()
 
 
@@ -139,7 +140,7 @@ class SourceData:
         If a great or less then modifer is passed before the number it will 
         return that number + all > or < it's self.
         '''
-        for line in self.year_data:
+        for line in self.year_data_lines:
             if mod == ">":
                 if len(line) > int(numb):
                     print(line, "\n")
@@ -148,8 +149,7 @@ class SourceData:
                     print(line, "\n")
             else:
                 if len(line) == int(numb):
-                    print(line, "\n")      
-
+                    print(line, "\n")   
 
     def clear(self, num):
         for _ in range(num): 
@@ -177,7 +177,7 @@ class SourceData:
         mylist = list(args)
         mylist.sort(reverse=True)
         for item in mylist:
-            del self.year_data[position][item]
+            del self.year_data_lines[position][item]
 
 
     def show_day_and_verse_info(self):
@@ -186,11 +186,10 @@ class SourceData:
         It then check if any of those are too small are large and prints them.
         Finally it offers to print all lines found and returs all lines found. 
         '''
-        self.clear(80)
         date_line_found_list = []
         problem_list = []
-        for line in self.year_data:
-            date_line_found_list.append(self.find_date_verse_lines(line))
+        for day in self.year_data_lines:
+            date_line_found_list.append(self.find_date_verse_lines(day))
         for entry in date_line_found_list:
             if len(entry) > 7 or len(entry) < 6:
                 problem_list.append(entry)
@@ -212,6 +211,18 @@ class SourceData:
 ########################## Working with day data ##############################
 
 
+    def parse_day_to_line(self, day):
+        '''
+        Takes each day list in the year_data and splits it into seperate lists.
+        Each line list will start with the origonal index followed by the 
+        line text.
+        '''
+        day_list = []
+        for count, line in enumerate(day):
+            day_list.append([count, line])
+        return day_list
+
+
     def find_date_verse_lines(self, day_entry):
         '''
         Returns a list of date and verses from a single date entry. The first 
@@ -223,10 +234,10 @@ class SourceData:
         for day in self.day_of_the_week_list:
             for count, line in enumerate(day_entry):
 
-                if day + "," in line and "—" in line:
+                if day + "," in line[-1] and "—" in line[-1]:
                     day_verse_line =  [count, "d+v"] + re.split('[—;]', \
-                    line.replace("\n", "")) + \
-                    day_entry[count + 1].replace("\n", "").split(";")
+                    line[-1].replace("\n", "")) + \
+                    day_entry[count + 1][-1].replace("\n", "").split(";")
 
                     for count, item in enumerate(day_verse_line):
                         try:
@@ -239,35 +250,41 @@ class SourceData:
 
                     return day_verse_line
 
+
     def find_missing_prayer_line(self):
         '''
         Finds day entries that do not end in a prayer. Removed the line
         from the year_data and adds to the endign_list a list with the 
         index, class name and line. This function will be called second. 
         '''
-        for count, day in enumerate(self.year_data):
-            if not any(ending in day[-1][-12:] for ending in self.day_ending_words):
-                info_index = len(day) + 3
-                # self.ending_info.append([info_index, "info", day[-1]])
-                self.new_year_dict[count +1].append([info_index, "info", day[-1]])
+        for count, day in enumerate(self.year_data_lines):
+            if not any(ending in day[-1][-1][-12:] for ending in self.day_ending_words):
+                info_index = day[-1][0]
+                self.new_year_dict[count +1].append([info_index, "info", day[-1][-1]])
                 self.remove_lines_from_year_list(count, -1)
+
 
     def find_last_three_lines(self):
         '''
         Finds the last three lines of each day which will be the 
         watchword(day), doctrinal, and prayer. 
         '''
-        for count, day in enumerate(self.year_data):
-            self.new_year_dict[count + 1].append([day[-3]]) # See below
-            self.new_year_dict[count + 1].append(day[-2])
-            self.new_year_dict[count + 1].append(day[-1])
+        for count, day in enumerate(self.year_data_lines):
+
+            self.new_year_dict[count + 1].append([day[-3][0], "prayer", day[-3][1]])
+            self.new_year_dict[count + 1].append([day[-2][0], "docT", day[-2][1]])
+            self.new_year_dict[count + 1].append([day[-1][0], "watchD", day[-1][1]])
             for _ in range(3):
                 self.remove_lines_from_year_list(count, -1)
 
 
-###############################################################################
-# Hello future me...You will need to rewrite most of this...uggg. On the
-# initial parse 'parse_files_by_day' change the logic to add the origonial 
-# day index as the first element in the list. That is the only way you are 
-# going to know what the order was origonally. This does mean that every
-# processing step after this initial one will need to be changed..Sorry :(
+    def find_watchword_lines(self):
+        '''
+        Finds all lines that start with "Watchword for " and adds them to the dict.
+        '''
+        for count, day in enumerate(self.year_data_lines):
+            for index, line in enumerate(day):
+                if "Watchword for " in line[1] or "Watchword  for " in line[1]:
+                    self.new_year_dict[count + 1].append([line[0], "watchO", line[1]])
+                    self.remove_lines_from_year_list(count, index)
+                    

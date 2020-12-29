@@ -7,6 +7,14 @@ All named date + verse lines need to be on two seperate lines (name date + verse
 If a verse has additional chapters or verses it should always be seperated by a command
 
 
+Things to watch for:
+If you are seeing wierd extra lines when running "all" after all the parses, check for incorrect line endings (like they 
+split a prayer line for example, onto two seperate lines...for no reason)
+
+Sometimes there will be a ";" in place of a "," in the verses. You might catch this but running #5
+
+
+
 
 Structuring the JSON file:
 <year>.JSON
