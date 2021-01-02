@@ -87,6 +87,20 @@ function textOnlyH2(line){
     document.querySelector("body").appendChild(para);
 }
 
+// Test function for displaying day data
+function testDisplay(currentDayEntry) {
+    console.log(currentDayEntry.length);
+    //This is a reset of the body
+    var body = document.querySelector("body");
+    body.innerHTML = '';
+    for (var i = 0; i < currentDayEntry.length; i++){
+        var para = document.createElement("p");
+        var text = document.createTextNode(currentDayEntry[i]);
+        para.appendChild(text);
+        document.querySelector("body").appendChild(para);
+    }
+}
+
 // The will handle all HTML for a JSON entry with five lines
 function fiveLineDay(currentDayEntry){
     //This is a reset of the HTML body
@@ -237,7 +251,7 @@ function nineLineDay(currentDayEntry){
 
 //This sets the value of the day to today's "Day number"(current day number)
 var today = new Date()
-console.log(today);
+console.log("The current day is: "+today);
 var day = Math.ceil((today - new Date(today.getFullYear(), 0, 1)) / 86400000);
 
 
@@ -257,7 +271,7 @@ var defaults = {
 // matches final<year>.json
 function getJsonFile(textYear){
     // var requestURL = "https://raw.githubusercontent.com/thecodinghyrax/Bible_page_update_2019/master/final" + textYear + ".json"
-    var requestURL = "" + textYear + ".json"
+    var requestURL = "https://raw.githubusercontent.com/thecodinghyrax/Bible_page_update_v3/major-change-for-index/" + textYear + ".json"
     var request = new XMLHttpRequest();
     request.open('GET', requestURL)
     request.responseType = 'json';
@@ -276,20 +290,22 @@ request.onload = function() {
     // Main function handles all of the other function calls. 
     // This will be recalled after the "next" and/or "previous" buttons are clicked
     var data = request.response;
-    console.log(data);
-    if (data.dayText[defaults.day]["line_count"] == 5){
-        fiveLineDay(data.dayText[defaults.day]);
-    } else if (data.dayText[defaults.day]["line_count"] == 6){
-        sixLineDay(data.dayText[defaults.day]);
-    } else if (data.dayText[defaults.day]["line_count"] == 7){
-        sevenLineDay(data.dayText[defaults.day]);
-    } else if (data.dayText[defaults.day]["line_count"] == 8){
-        eightLineDay(data.dayText[defaults.day]);
-    } else if (data.dayText[defaults.day]["line_count"] == 9){
-        nineLineDay(data.dayText[defaults.day]);
-    } else {
-        console.log("I have failed to match a line_count for today!")
-        }
+    testDisplay(data[defaults.day]);
+
+    // console.log(data);
+    // if (data.dayText[defaults.day]["line_count"] == 5){
+    //     fiveLineDay(data.dayText[defaults.day]);
+    // } else if (data.dayText[defaults.day]["line_count"] == 6){
+    //     sixLineDay(data.dayText[defaults.day]);
+    // } else if (data.dayText[defaults.day]["line_count"] == 7){
+    //     sevenLineDay(data.dayText[defaults.day]);
+    // } else if (data.dayText[defaults.day]["line_count"] == 8){
+    //     eightLineDay(data.dayText[defaults.day]);
+    // } else if (data.dayText[defaults.day]["line_count"] == 9){
+    //     nineLineDay(data.dayText[defaults.day]);
+    // } else {
+    //     console.log("I have failed to match a line_count for today!")
+    //     }
     
     // This is creating the buttons and adding them to the HTML
     var div = document.createElement("div");
@@ -397,10 +413,10 @@ request.onload = function() {
     document.getElementById("search").onclick = function () {
         var x = document.getElementById("input")
         var searchInput = x.value;
-        // console.log("Here is what is returned from the date input : ");
-        // console.log(searchInput);
+        console.log("Here is what is returned from the date input : ");
+        console.log(searchInput);
         var inputList = searchInput.split("-");
-        // console.log(inputList);
+        console.log(inputList);
         defaults.year = inputList[0]
         console.log("The year after searching is : " + defaults.year);
         
