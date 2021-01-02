@@ -11,7 +11,9 @@ Things to watch for:
 If you are seeing wierd extra lines when running "all" after all the parses, check for incorrect line endings (like they 
 split a prayer line for example, onto two seperate lines...for no reason)
 
-Sometimes there will be a ";" in place of a "," in the verses. You might catch this but running #5
+Sometimes there will be a ";" in place of a "," in the verses. You might catch this but running #3 !! Trust this. It's either long or wrong
+
+If a parse all crashes, try running each parsing setup with and "all" run inbetween. 
 
 
 

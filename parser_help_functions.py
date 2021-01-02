@@ -1,4 +1,5 @@
 import re
+import json
 
 class SourceData:
     def __init__(self, source_file):
@@ -14,7 +15,8 @@ class SourceData:
                                     'Thursday', 'Friday', 'Saturday', 
                                     'Sunday']
         self.day_ending_words = ["Amen!", "amen!", "Amen.", "Hallelujah!", 
-                                "ng to be?", "ry of God!"]
+                                "ng to be?", "ry of God!", " for Burial)",
+                                "fessions.)"]
         self.leap_year_list = ['2016', '2020', '2024', '2028', '2032']
         self.months_list = ['January', 'February', 'March', 'April', 'May', 
                             'June', 'July', 'August', 'September', 'October', 
@@ -94,6 +96,17 @@ class SourceData:
                     blank_lines += 1
             if len(day_entry_list) > 0:
                 self.year_data.append(day_entry_list)
+
+
+    def check_day_spacing(self):
+        '''
+        Prints out days with likely spacing issues. If a day starts with the day
+        and has more that 5 entries, there is probably a missing space.
+        '''
+        for day in self.year_data_lines:
+            for day_name in self.day_of_the_week_list:
+                if day_name + ", " in day[0][1] and len(day) > 5:
+                    print(f'Check the spacing after {day[0][1]}')
 
 
     def check_year_for_num_of_days(self):
@@ -190,22 +203,92 @@ class SourceData:
         problem_list = []
         for day in self.year_data_lines:
             date_line_found_list.append(self.find_date_verse_lines(day))
-        for entry in date_line_found_list:
-            if len(entry) > 7 or len(entry) < 6:
-                problem_list.append(entry)
+        for count, entry in enumerate(date_line_found_list):
+            if entry is None:
+                print(f'Please check {date_line_found_list[count + 1]}')
+            else:
+                if len(entry) > 7 or len(entry) < 6:
+                    problem_list.append(entry)
+                for item in entry[2:]:
+                    if len(item) > 30:
+                        if entry not in problem_list:
+                            problem_list.append(entry)
         print(f'\n\nThere were {len(date_line_found_list)} date line entries found',
                 ' for this year!\n\n')
         if len(problem_list) > 0:
             print('\nThere may be an issue with the line(s) below:')
             for line in problem_list:
                 print(line)
+            show_list = input("\n\nWould you like to see the entire list?(y/n)\n>>")
+            if show_list == 'y':
+                for line in date_line_found_list:
+                    print(f'Length = {len(line)} - {line}')
+                print("\n\n")
         else:
             show_list = input("\nEverything looks normal. Would you like to see the entire list?(y/n)\n>>")
             if show_list == 'y':
                 for line in date_line_found_list:
-                    print(line)
+                    print(f'Length = {len(line)} - {line}')
                 print("\n\n")
         return date_line_found_list
+
+
+    def process_date_verse_days(self, verse_type):
+        if verse_type == "normal":
+            for count, day in enumerate(self.year_data_lines):
+                day_list = self.find_date_verse_lines(day)
+                self.new_year_dict[count + 1].append(day_list)
+                self.remove_lines_from_year_list(count, day_list[0], (day_list[0] + 1))
+        elif verse_type == "special":
+            for count, day in enumerate(self.year_data_lines):
+                day_list = self.find_special_verse_lines(day)
+                if len(day_list) > 0:
+                    self.new_year_dict[count + 1].append(day_list[1:])
+                    self.remove_lines_from_year_list(count, day_list[0], (day_list[0] + 1))
+
+
+    def order_dict_results(self):
+        for key, value in self.new_year_dict.items():
+            self.new_year_dict[key] = sorted(value, key=lambda value: value[0])
+
+
+    def remove_indexes_from_dict(self):
+        missed_values = 0
+        for day in self.year_data_lines:
+            if len(day) > 0:
+                print(day, " - This should not still be in the year_data_lines list")
+                missed_values += 1
+        if missed_values == 0:
+            for key, value in self.new_year_dict.items():
+                new_day_line = []
+                for line in value:
+                    new_day_line.append(line[1:])
+                self.new_year_dict[key] = new_day_line
+        else:
+            print('\n\nI stopped before removing the indexes from the dict\n\n')
+
+
+    def process_all(self):
+        self.process_date_verse_days("normal")
+        self.find_missing_prayer_line()
+        self.find_last_three_lines()
+        self.find_watchword_lines()
+        self.process_date_verse_days("special")
+        self.find_remaining_info_lines()
+        self.order_dict_results()
+        self.remove_indexes_from_dict()
+
+    def output_to_json(self):
+        if len(self.new_year_dict) > 10:
+            file_name = self.source_file[:-4] + '.json'
+
+            with open(file_name, 'w') as out:
+                json.dump(self.new_year_dict, out)
+            print(f'\n\n{file_name} has been created successfully!\n\n')
+        else:
+            print(f'\n\nIt looks like there is a problem with the new_year_data (too short). Did you fully parse all of the data?\n\n')
+
+
 
 
 ########################## Working with day data ##############################
@@ -235,7 +318,7 @@ class SourceData:
             for count, line in enumerate(day_entry):
 
                 if day + "," in line[-1] and "—" in line[-1]:
-                    day_verse_line =  [count, "d+v"] + re.split('[—;]', \
+                    day_verse_line =  [line[0], "d+v"] + re.split('[—;]', \
                     line[-1].replace("\n", "")) + \
                     day_entry[count + 1][-1].replace("\n", "").split(";")
 
@@ -271,9 +354,9 @@ class SourceData:
         '''
         for count, day in enumerate(self.year_data_lines):
 
-            self.new_year_dict[count + 1].append([day[-3][0], "prayer", day[-3][1]])
+            self.new_year_dict[count + 1].append([day[-3][0], "watchD", day[-3][1]])
             self.new_year_dict[count + 1].append([day[-2][0], "docT", day[-2][1]])
-            self.new_year_dict[count + 1].append([day[-1][0], "watchD", day[-1][1]])
+            self.new_year_dict[count + 1].append([day[-1][0], "prayer", day[-1][1]])
             for _ in range(3):
                 self.remove_lines_from_year_list(count, -1)
 
@@ -288,3 +371,58 @@ class SourceData:
                     self.new_year_dict[count + 1].append([line[0], "watchO", line[1]])
                     self.remove_lines_from_year_list(count, index)
                     
+
+    def find_special_verse_lines(self, day_entry):
+        '''
+        Returns a list of special date and verses from a single date entry. The first 
+        element will be the starting index of the date list it was read from 
+        (so I can keep things in order). The second element will be the name of 
+        the css class to use, third will be the date and all other elements
+        will be verses for that day.
+        '''
+        # This is not working properly...Check May 5 2016. 
+        # Also, need to account for days that have a "title — verse" but no ; TODO
+        day_verse_line = []
+        for line_count, line in enumerate(day_entry):
+            if "—" in line[1] and ";" in line[1] and len(line[1]) < 80:
+                line[1] = line[1].strip()
+                if line[-1] == ";":
+                    line = line[1][-1].replace(";", "")
+                # day_verse_line =  [line[0], "d+v"] + re.split('[—;]', \
+                # line[-1].replace("\n", "")) + \
+                # day_entry[line_count + 1][-1].replace("\n", "").split(";")
+                try:
+                    day_verse_line =  [line[0], "d+v"] + re.split('[—;]', \
+                    line[-1].replace("\n", "")) + \
+                    day_entry[line_count + 1][-1].replace("\n", "").split(";")
+                except IndexError:
+                    print(f'There was an indexerror in {day_entry}')
+                for count, item in enumerate(day_verse_line):
+                    try:
+                        if type(item) == str:
+                            day_verse_line[count] = item.strip()
+                        if item == "":
+                            day_verse_line.pop(count)
+                    except:
+                        print(f'We are on {day_verse_line}')
+                # print(day_verse_line, "  -  ", line_count)
+                return [line_count] + day_verse_line
+        return day_verse_line
+
+
+
+
+    def find_remaining_info_lines(self):
+        '''
+        Finds all remaining lines from the year_data list and adds them
+        to the new_year_dict. All remaining lines are assumed to be
+        info lines.
+        '''
+        for count, day in enumerate(self.year_data_lines):
+            if len(day) > 0:
+                for line in day:
+                    day_verse_line = [line[0], "info", line[1]]
+                    self.new_year_dict[count + 1].append(day_verse_line)
+                while len(day) > 0:
+                    self.remove_lines_from_year_list(count, 0)
+
