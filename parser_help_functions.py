@@ -318,7 +318,7 @@ class SourceData:
             for count, line in enumerate(day_entry):
 
                 if day + "," in line[-1] and "—" in line[-1]:
-                    day_verse_line =  [line[0], "d+v"] + re.split('[—;]', \
+                    day_verse_line =  [line[0], "dateVerse"] + re.split('[—;]', \
                     line[-1].replace("\n", "")) + \
                     day_entry[count + 1][-1].replace("\n", "").split(";")
 
@@ -380,19 +380,14 @@ class SourceData:
         the css class to use, third will be the date and all other elements
         will be verses for that day.
         '''
-        # This is not working properly...Check May 5 2016. 
-        # Also, need to account for days that have a "title — verse" but no ; TODO
         day_verse_line = []
         for line_count, line in enumerate(day_entry):
             if "—" in line[1] and ";" in line[1] and len(line[1]) < 80:
                 line[1] = line[1].strip()
                 if line[-1] == ";":
                     line = line[1][-1].replace(";", "")
-                # day_verse_line =  [line[0], "d+v"] + re.split('[—;]', \
-                # line[-1].replace("\n", "")) + \
-                # day_entry[line_count + 1][-1].replace("\n", "").split(";")
                 try:
-                    day_verse_line =  [line[0], "d+v"] + re.split('[—;]', \
+                    day_verse_line =  [line[0], "dateVerse"] + re.split('[—;]', \
                     line[-1].replace("\n", "")) + \
                     day_entry[line_count + 1][-1].replace("\n", "").split(";")
                 except IndexError:
@@ -405,7 +400,6 @@ class SourceData:
                             day_verse_line.pop(count)
                     except:
                         print(f'We are on {day_verse_line}')
-                # print(day_verse_line, "  -  ", line_count)
                 return [line_count] + day_verse_line
         return day_verse_line
 
