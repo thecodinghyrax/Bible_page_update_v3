@@ -396,16 +396,15 @@ request.onload = function() {
     document.getElementById('next').onclick = next;
     document.getElementById('previous').onclick = previous;
     document.body.addEventListener("keyup", function(event) {
-        if (event.keyCode === 39) {
-            console.log("The Enter key was pressed");
-            
+        if (event.code === "ArrowRight") {            
             event.preventDefault();
+            this.outerHTML = this.outerHTML;
             next();
-            this.outerHTML = this.outerHTML;
-        } else if (event.keyCode === 37){
+        } 
+        if (event.code === "ArrowLeft"){
             event.preventDefault();
-            previous();
             this.outerHTML = this.outerHTML;
+            previous();
         }
     });
 
@@ -416,7 +415,7 @@ request.onload = function() {
         console.log("Here is what is returned from the date input : ");
         console.log(searchInput);
         var inputList = searchInput.split("-");
-        console.log(inputList);
+        // console.log(inputList);
         defaults.year = inputList[0]
         console.log("The year after searching is : " + defaults.year);
         
