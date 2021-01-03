@@ -6,11 +6,34 @@ function createLink(verse){
 }
 
 // Creates an HTML line for date text
-function dateLine(line){
+function verses(line){
+    var lineClass = line.shift()
     var line1 = document.createElement("h2");
-    var text1 = document.createTextNode("Daily Text - " + line);
+    line1.className = lineClass
+    if (lineClass === "dateVerse"){
+        var text1 = document.createTextNode("Daily Text - " + line.shift());
+    } else {
+        var text1 = document.createTextNode(line.shift());
+    }
     line1.appendChild(text1);
     document.querySelector("body").appendChild(line1);
+
+
+    for (var i = 0; i < line.length; i++){
+        var para = document.createElement("p");
+        var span = document.createElement("span");
+        var anchor = document.createElement("a");
+        var text = document.createTextNode(line[i]);
+        var tab = document.createTextNode("\t\t");
+        anchor.appendChild(text);
+        anchor.setAttribute("href", createLink(line[i]));
+        anchor.setAttribute("target", "_blank");
+        span.appendChild(anchor);
+        para.appendChild(span);
+        para.appendChild(tab);
+        document.querySelector("body").appendChild(para);
+    }
+
 }
 
 // Creates an HTML line for each verse in a verse line
@@ -89,11 +112,11 @@ function textOnlyH2(line){
 
 // Test function for displaying day data
 function testDisplay(currentDayEntry) {
-    console.log(currentDayEntry.length);
     //This is a reset of the body
     var body = document.querySelector("body");
     body.innerHTML = '';
-    for (var i = 0; i < currentDayEntry.length; i++){
+    verses(currentDayEntry[0]);
+    for (var i = 1; i < currentDayEntry.length; i++){
         var para = document.createElement("p");
         var text = document.createTextNode(currentDayEntry[i]);
         para.appendChild(text);

@@ -387,7 +387,7 @@ class SourceData:
                 if line[-1] == ";":
                     line = line[1][-1].replace(";", "")
                 try:
-                    day_verse_line =  [line[0], "dateVerse"] + re.split('[—;]', \
+                    day_verse_line =  [line[0], "specialVerse"] + re.split('[—;]', \
                     line[-1].replace("\n", "")) + \
                     day_entry[line_count + 1][-1].replace("\n", "").split(";")
                 except IndexError:
