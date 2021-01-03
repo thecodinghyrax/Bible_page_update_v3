@@ -5,11 +5,11 @@ function createLink(verse){
     return link
 }
 
-// Creates an HTML line for date text
+// Creates an HTML line for specialVerses or dateVerse line
 function verses(line){
     var lineClass = line.shift()
     var line1 = document.createElement("h2");
-    line1.className = lineClass
+    line1.className = lineClass;
     if (lineClass === "dateVerse"){
         var text1 = document.createTextNode("Daily Text - " + line.shift());
     } else {
@@ -18,6 +18,10 @@ function verses(line){
     line1.appendChild(text1);
     document.querySelector("body").appendChild(line1);
 
+    var line2 = document.createElement("h3");
+    var text2 = document.createTextNode("Daily Scripture Lessions");
+    line2.appendChild(text2);
+    document.querySelector("body").appendChild(line2);
 
     for (var i = 0; i < line.length; i++){
         var para = document.createElement("p");
@@ -33,244 +37,106 @@ function verses(line){
         para.appendChild(tab);
         document.querySelector("body").appendChild(para);
     }
-
 }
 
-// Creates an HTML line for each verse in a verse line
-function verseLine (line){    
-        for (var j = 0; j < line.length; j++){
-            var para = document.createElement("p");
-            var span = document.createElement("span");
-            var anchor = document.createElement("a");
-            var text = document.createTextNode(line[j]);
-            var tab = document.createTextNode("\t\t");
-            anchor.appendChild(text);
-            anchor.setAttribute("href", createLink(line[j]));
-            anchor.setAttribute("target", "_blank");
-            span.appendChild(anchor);
-            para.appendChild(span);
-            para.appendChild(tab);
-            document.querySelector("body").appendChild(para);
-            }
-        //version = "NIV";
-        }
+function infoLine(line){
+    var lineClass = line.shift();
+    if (line[0].length > 40){
+        var line1 = document.createElement("p");
+        console.log("The line.length is: " + line[0].length);
+    line1.innerHTML = "<b>" + line.shift() + "</b><br/>";
 
-// Leaving this in although its unused at this time. 
-// Creates an HTML line for a text line that contains text + verse. 
-// function textAndVerse(line) {
-//     var para = document.createElement("p");
-//     var span = document.createElement("span");
-//     var verseSpan = document.createElement("span");
-//     var anchor = document.createElement("a");
-//     var text = document.createTextNode(line[0]);
-//     var verseText = document.createTextNode(line[1]);
-//     var tab = document.createTextNode("\t\t");
+    } else {
+        var line1 = document.createElement("h2");
+    line1.innerHTML = line.shift();
 
-//     span.appendChild(text);
-//     para.appendChild(span);
-//     anchor.appendChild(verseText);
-//     anchor.setAttribute("href", createLink(line[1]));
-//     anchor.setAttribute("target", "_blank");
-//     verseSpan.appendChild(anchor);
-//     para.appendChild(verseSpan);
-//     document.querySelector("body").appendChild(para);
-//     version = "NIV";
-    
-// }
-
-// Creates an HTML line for text only
-function textOnly(line){
-    var para = document.createElement("p");
-    var text = document.createTextNode(line);
-    para.appendChild(text);
-    document.querySelector("body").appendChild(para);
+    }
+    line1.className = lineClass;
+    console.log(line);
+    document.querySelector("body").appendChild(line1);
 }
 
-// Creates an h3 section heading with text passed as "heading"
-function sectionHeading(heading){
-    var heading2 = document.createElement("h3");
-    var text = document.createTextNode(heading);
-    heading2.appendChild(text);
-    document.querySelector("body").appendChild(heading2);
+function watchO(line){
+    var lineClass = line.shift();
+
+    var watchWordOtherList = line[0].split("\u2014");
+    var line1 = document.createElement('h3');
+    var text1 = document.createTextNode(watchWordOtherList[0]);
+    line1.appendChild(text1);
+    document.querySelector("body").appendChild(line1);
+
+    var line2 = document.createElement("p");
+    var text2 = document.createTextNode(watchWordOtherList[1]);
+    line2.className = lineClass;
+    line2.appendChild(text2);
+    document.querySelector("body").appendChild(line2);
 }
 
-// Creates an h1 section heading with text passed as "line"
-function textOnlyH1(line){
-    var para = document.createElement("h1");
-    var text = document.createTextNode(line);
-    para.appendChild(text);
-    document.querySelector("body").appendChild(para);
+function watchD(line){
+    var lineClass = line.shift();
+    var line1 = document.createElement("h3");
+    line1.className = lineClass;
+    text1 = document.createTextNode("Watchword For the Day");
+    line1.appendChild(text1);
+    document.querySelector("body").appendChild(line1);
+    var line2 = document.createElement("p");
+    line2.className = lineClass;
+    text2 = document.createTextNode(line.shift());
+    line2.appendChild(text2);
+    document.querySelector("body").appendChild(line2);
 }
 
-// Creates an h2 section heading with text passed as "line"
-function textOnlyH2(line){
-    var para = document.createElement("h2");
-    var text = document.createTextNode(line);
-    para.appendChild(text);
-    document.querySelector("body").appendChild(para);
+function docT(line){
+    var lineClass = line.shift();
+    var line1 = document.createElement("h3");
+    line1.className = lineClass;
+    text1 = document.createTextNode("Doctrinal Text");
+    line1.appendChild(text1);
+    document.querySelector("body").appendChild(line1);
+    var line2 = document.createElement("p");
+    line2.className = lineClass;
+    text2 = document.createTextNode(line.shift());
+    line2.appendChild(text2);
+    document.querySelector("body").appendChild(line2);
+}
+
+function prayer(line){
+    var lineClass = line.shift();
+    var line1 = document.createElement("h3");
+    line1.className = lineClass;
+    text1 = document.createTextNode("Prayer");
+    line1.appendChild(text1);
+    document.querySelector("body").appendChild(line1);
+    var line2 = document.createElement("p");
+    line2.className = lineClass;
+    text2 = document.createTextNode(line.shift());
+    line2.appendChild(text2);
+    document.querySelector("body").appendChild(line2);
 }
 
 // Test function for displaying day data
-function testDisplay(currentDayEntry) {
+function dayDisplay(currentDayEntry) {
     //This is a reset of the body
     var body = document.querySelector("body");
     body.innerHTML = '';
-    verses(currentDayEntry[0]);
-    for (var i = 1; i < currentDayEntry.length; i++){
-        var para = document.createElement("p");
-        var text = document.createTextNode(currentDayEntry[i]);
-        para.appendChild(text);
-        document.querySelector("body").appendChild(para);
-    }
+
+    currentDayEntry.forEach(line => {
+        if (line[0] === "dateVerse" || line[0] === "specialVerse") {
+            verses(line);
+        } else if (line[0] === "info"){
+            infoLine(line);
+        } else if (line[0] === "watchO"){
+            watchO(line);
+        } else if (line[0] === "watchD"){
+            watchD(line);
+        } else if (line[0] === "docT"){
+            docT(line);
+        } else if (line[0] === "prayer"){
+            prayer(line);
+        } 
+    });
 }
 
-// The will handle all HTML for a JSON entry with five lines
-function fiveLineDay(currentDayEntry){
-    //This is a reset of the HTML body
-    var body = document.querySelector("body");
-    body.innerHTML = '';
-    // Handeling line 1
-    dateLine(currentDayEntry["line1"][0]);    
-    // Handeling line 2
-    sectionHeading("Daily Scripture Lessions");
-    verseLine(currentDayEntry["line2"]);
-    // Handeling line 3
-    sectionHeading("Watchword For the Day");
-    textOnly(currentDayEntry["line3"][0]);
-    // Handeling line 4
-    sectionHeading("Doctrinal Text");
-    textOnly(currentDayEntry["line4"][0]);
-    // Handeling line 5
-    sectionHeading("Prayer");
-    textOnly(currentDayEntry["line5"][0]);
-}
-
-// The will handle all HTML for a JSON entry with six lines
-function sixLineDay(currentDayEntry){
-    //This is a reset of the body
-    var body = document.querySelector("body");
-    body.innerHTML = '';
-    // Handeling line 1
-    textOnlyH1(currentDayEntry["line1"][0]);
-    // Handeling line 2
-    dateLine(currentDayEntry["line2"][0]);
-    // Handeling line 3
-    sectionHeading("Daily Scripture Lessions");
-    verseLine(currentDayEntry["line3"]);
-    // Handeling line 4
-    sectionHeading("Watchword For the Day");
-    textOnly(currentDayEntry["line4"]);
-    // Handeling line 5
-    sectionHeading("Doctrinal Text");
-    textOnly(currentDayEntry["line5"]);
-    // Handeling line 6
-    sectionHeading("Prayer");
-    textOnly(currentDayEntry["line6"]);
-}
-
-// The will handle all HTML for a JSON entry with seven lines
-function sevenLineDay(currentDayEntry){
-    //This is a reset of the body
-    var body = document.querySelector("body");
-    body.innerHTML = '';
-    // Handeling line 1
-    textOnlyH1(currentDayEntry["line1"][0]);
-    // Handeling line 2
-    dateLine(currentDayEntry["line3"][0]);//order is switched intentionally
-    // Handeling line 3
-    if (currentDayEntry["line2"].length == 2){
-        sectionHeading(currentDayEntry["line2"][0]);
-        textOnly(currentDayEntry["line2"][1]);
-    } else {
-        sectionHeading("Watchword for the Week");
-        textOnly(currentDayEntry["line2"][0]);
-    }
-    
-    // Handeling line 4
-    sectionHeading("Daily Scripture Lessions");
-    verseLine(currentDayEntry["line4"]);
-    // Handeling line 5
-    sectionHeading("Watchword For the Day");
-    textOnly(currentDayEntry["line5"][0]);
-    // Handeling line 6
-    sectionHeading("Doctrinal Text");
-    textOnly(currentDayEntry["line6"]);
-    // Handeling line 7
-    sectionHeading("Prayer");
-    textOnly(currentDayEntry["line7"]);
-}
-
-// The will handle all HTML for a JSON entry with eigth lines - Please note....this is still broken
-function eightLineDay(currentDayEntry){
-    //This is a reset of the body
-    var body = document.querySelector("body");
-    body.innerHTML = '';
-    // Handeling line 1
-    textOnlyH1(currentDayEntry["line1"]);
-    // Handeling line 2
-    dateLine(currentDayEntry["line3"][0]);//order is switched intentionally
-    // Handeling line 3    
-    if (currentDayEntry["line2"].length <= 1){
-        console.log("This currentDayEntry has no real entry for line2");
-    } else {
-        sectionHeading(currentDayEntry["line2"][0]);
-        textOnly(currentDayEntry["line2"][1]);
-        console.log(currentDayEntry["line2"]);
-        console.log(currentDayEntry["line2"].slice(1));
-    }
-    // Handeling line 4
-    sectionHeading("Daily Scripture Lessions");
-    verseLine(currentDayEntry["line3"].slice(1));
-    // Handeling line 5
-    sectionHeading(currentDayEntry["line4"][0]);
-    verseLine(currentDayEntry["line5"]);
-    // Handeling line 6
-    sectionHeading("Watchword For the Day");
-    textOnly(currentDayEntry["line6"]);
-    // Handeling line 7
-    sectionHeading("Doctrinal Text");
-    textOnly(currentDayEntry["line7"]);
-    // Handeling line 7
-    sectionHeading("Prayer");
-    textOnly(currentDayEntry["line8"]);
-}
-
-// The will handle all HTML for a JSON entry with nine lines - Please note....this is still broken
-function nineLineDay(currentDayEntry){
-    //This is a reset of the body
-    var body = document.querySelector("body");
-    body.innerHTML = '';
-    // Handeling line 1
-    textOnlyH1(currentDayEntry["line1"][0]);
-    // Handeling line 2
-    dateLine(currentDayEntry["line3"]);
-    // Handeling line 3
-    if (currentDayEntry["line2"].length <= 1){
-        console.log("This currentDayEntry has no real entry for line2");
-        textOnlyH2(currentDayEntry["line2"][0]);
-    } else {
-        sectionHeading(currentDayEntry["line2"][0]);
-        textOnly(currentDayEntry["line2"][1]);
-        console.log(currentDayEntry["line2"]);
-        console.log(currentDayEntry["line2"].slice(1));
-    }
-    // Handeling line 4
-    sectionHeading("Daily Scripture Lessions");
-    verseLine(currentDayEntry["line4"]);
-    // Handeling line 5
-    sectionHeading(currentDayEntry["line5"][0]);
-    // Handeling line 6
-    verseLine(currentDayEntry["line6"]);
-    // Handeling line 7
-    sectionHeading("Watchword For the Day");
-    textOnly(currentDayEntry["line7"][0]);
-    // Handeling line 8
-    sectionHeading("Doctrinal Text");
-    textOnly(currentDayEntry["line8"][0]);
-    // Handeling line 9
-    sectionHeading("Prayer");
-    textOnly(currentDayEntry["line9"][0]);
-}
 
 //This sets the value of the day to today's "Day number"(current day number)
 var today = new Date()
@@ -313,22 +179,8 @@ request.onload = function() {
     // Main function handles all of the other function calls. 
     // This will be recalled after the "next" and/or "previous" buttons are clicked
     var data = request.response;
-    testDisplay(data[defaults.day]);
+    dayDisplay(data[defaults.day]);
 
-    // console.log(data);
-    // if (data.dayText[defaults.day]["line_count"] == 5){
-    //     fiveLineDay(data.dayText[defaults.day]);
-    // } else if (data.dayText[defaults.day]["line_count"] == 6){
-    //     sixLineDay(data.dayText[defaults.day]);
-    // } else if (data.dayText[defaults.day]["line_count"] == 7){
-    //     sevenLineDay(data.dayText[defaults.day]);
-    // } else if (data.dayText[defaults.day]["line_count"] == 8){
-    //     eightLineDay(data.dayText[defaults.day]);
-    // } else if (data.dayText[defaults.day]["line_count"] == 9){
-    //     nineLineDay(data.dayText[defaults.day]);
-    // } else {
-    //     console.log("I have failed to match a line_count for today!")
-    //     }
     
     // This is creating the buttons and adding them to the HTML
     var div = document.createElement("div");
@@ -459,8 +311,6 @@ request.onload = function() {
   
 };// main()
     
-
-
 }
 
 // Initial call of the main() function
