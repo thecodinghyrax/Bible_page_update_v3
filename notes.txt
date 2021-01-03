@@ -45,3 +45,8 @@ Example:
     },
     "2" : { ect...},
     }
+
+new function for parsing April 2, 2021?
+    There is a line that has a title, a "—", and and verse. 
+    Make two info fuinctions: one large for short text, 
+        one small for long text
