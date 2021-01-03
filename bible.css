@@ -1,0 +1,29 @@
+  
+body {
+    font-family: 'Futura PT', sans-serif;
+    font-size: 3.5vw;
+  }
+  
+  button {
+    height: 5vh;
+    width: 15vw;
+  }
+  
+  input {
+    height: 4.6vh;
+  }
+  
+  div {
+    display: block;
+  }
+
+  a {
+      text-decoration: none;
+  }
+  
+  a:link {
+      color: #56331d;
+  }
+  a:hover {
+      color: #1e5254;
+  }
