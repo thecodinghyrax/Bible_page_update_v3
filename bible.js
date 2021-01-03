@@ -61,12 +61,12 @@ function watchO(line){
 
     var watchWordOtherList = line[0].split("\u2014");
     var line1 = document.createElement('h3');
-    var text1 = document.createTextNode(watchWordOtherList[0]);
+    var text1 = document.createTextNode(watchWordOtherList[0].trim());
     line1.appendChild(text1);
     document.querySelector("body").appendChild(line1);
 
     var line2 = document.createElement("p");
-    var text2 = document.createTextNode(watchWordOtherList[1]);
+    var text2 = document.createTextNode(watchWordOtherList[1].trim());
     line2.className = lineClass;
     line2.appendChild(text2);
     document.querySelector("body").appendChild(line2);
