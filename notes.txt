@@ -15,7 +15,7 @@ Sometimes there will be a ";" in place of a "," in the verses. You might catch t
 
 If a parse all crashes, try running each parsing setup with and "all" run inbetween. 
 
-
+!!!*****   You must change the first line of the bible.js file every year you add and new year   *****!!!!!
 
 
 Structuring the JSON file:
@@ -46,7 +46,4 @@ Example:
     "2" : { ect...},
     }
 
-new function for parsing April 2, 2021?
-    There is a line that has a title, a "—", and and verse. 
-    Make two info fuinctions: one large for short text, 
-        one small for long text
+

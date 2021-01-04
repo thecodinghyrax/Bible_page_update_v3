@@ -18,29 +18,6 @@ class SourceData:
                                 "ng to be?", "ry of God!", " for Burial)",
                                 "fessions.)"]
         self.leap_year_list = ['2016', '2020', '2024', '2028', '2032']
-        self.months_list = ['January', 'February', 'March', 'April', 'May', 
-                            'June', 'July', 'August', 'September', 'October', 
-                            'November', 'December']
-        self.books_of_bible_list = ['Genesis','Exodus', 'Leviticus', 'Numbers', 
-                                    'Deuteronomy', 'Joshua', 'Judges', 'Ruth', 
-                                    '1 Samuel', '2 Samuel', '1 Kings', 
-                                    '2 Kings', '1 Chronicles', '2 Chronicles', 
-                                    'Ezra', 'Nehemiah', 'Esther', 'Job',
-                                    'Psalms', 'Proverbs', 'Ecclesiastes',
-                                    'Song of Solomon', 'Isaiah', 'Jeremiah', 
-                                    'Lamentations', 'Ezekiel', 'Daniel', 
-                                    'Hosea', 'Joel', 'Amos', 'Obadiah',
-                                    'Jonah', 'Micah', 'Nahum', 'Habakkuk', 
-                                    'Zephaniah', 'Haggai', 'Zechariah', 
-                                    'Malachi', 'Matthew', 'Mark', 'Luke', 
-                                    'John', 'Acts', 'Romans', '1 Corinthians', 
-                                    '2 Corinthians', 'Galatians', 'Ephesians', 
-                                    'Philippians', 'Colossians', 
-                                    '1 Thessalonians', '2 Thessalonians', 
-                                    '1 Timothy', '2 Timothy', 'Titus', 
-                                    'Philemon', 'Hebrews', 'James', '1 Peter', 
-                                    '2 Peter', '1 John', '2 John', '3 John', 
-                                    'Jude', 'Revelation']
         self.update_year_data()
         self.new_year_dict = self.create_new_year_dict()
 
@@ -113,8 +90,8 @@ class SourceData:
         '''
         Extracts the year from the file name and checks if it is a leap year or
         not and then returns whether or not it has the correct number of 
-        entries. Incorrect number of entries would indicated that the day 
-        parsing has a spacing problem.
+        entries. Incorrect number of entries would indicate that the original
+        file has a spacing problem.
         '''
         year_name = self.source_file.split('.')[0]
         length = len(self.year_data)
