@@ -30,3 +30,6 @@ Now in version 3, the parser has been rewritten from scratch with the benefit of
 ## Conclusion 
 This project has a very specific use case but is currently in a workable state. Check out the final results here [Moravian Daily Text](https://cccog.com/moravian).
 
+=======
+# Bible_page_update_v3
+Version 3 of the bible text parser (last version?)
