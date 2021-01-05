@@ -11,7 +11,7 @@ var year = today.getFullYear();
 
 
 //This will hold the default day and year values. It can also be updated from the 
-// functions in the next and previous buttons. 
+// functions in the next and previous buttons. (State)
 var defaults = {
     year : year,
     day : day,
@@ -41,19 +41,17 @@ function createLink(verse){
 // Creates an HTML line for specialVerses or dateVerse line
 function verses(line){
     var lineClass = line.shift()
-    var line1 = document.createElement("h2");
-    line1.className = lineClass;
-    if (lineClass === "dateVerse"){
-        var text1 = document.createTextNode("Daily Text - " + line.shift());
-    } else {
-        var text1 = document.createTextNode(line.shift());
-    }
-    line1.appendChild(text1);
-    document.querySelector("body").appendChild(line1);
-
     var line2 = document.createElement("h3");
-    var text2 = document.createTextNode("Daily Scripture Lessions");
-    line2.appendChild(text2);
+
+    if (lineClass === "dateVerse"){
+        var line1 = document.createElement("h2");
+        line1.className = lineClass;
+        line1.innerHTML = "Daily Text - " + line.shift();
+        document.querySelector("body").appendChild(line1);
+        line2.innerHTML = "Daily Scripture Lessons";
+    } else {
+        line2.innerHTML = line.shift();
+    }
     document.querySelector("body").appendChild(line2);
 
     for (var i = 0; i < line.length; i++){
@@ -74,10 +72,10 @@ function verses(line){
 
 function infoLine(line){
     var lineClass = line.shift();
-    if (line[0].length > 40){
+    if (line[0].length > 45){
         var line1 = document.createElement("p");
         console.log("The line.length is: " + line[0].length);
-    line1.innerHTML = "<b>" + line.shift() + "</b><br/>";
+    line1.innerHTML = line.shift() + "<br/>";
     } else {
         var line1 = document.createElement("h2");
     line1.innerHTML = line.shift();
@@ -91,14 +89,11 @@ function watchO(line){
 
     var watchWordOtherList = line[0].split("\u2014");
     var line1 = document.createElement('h3');
-    var text1 = document.createTextNode(watchWordOtherList[0].trim());
-    line1.appendChild(text1);
+    line1.innerHTML = watchWordOtherList[0].trim();
     document.querySelector("body").appendChild(line1);
-
     var line2 = document.createElement("p");
-    var text2 = document.createTextNode(watchWordOtherList[1].trim());
+    line2.innerHTML = watchWordOtherList[1].trim();
     line2.className = lineClass;
-    line2.appendChild(text2);
     document.querySelector("body").appendChild(line2);
 }
 
@@ -106,13 +101,11 @@ function watchD(line){
     var lineClass = line.shift();
     var line1 = document.createElement("h3");
     line1.className = lineClass;
-    text1 = document.createTextNode("Watchword For the Day");
-    line1.appendChild(text1);
+    line1.innerHTML = "Watchword For the Day";
     document.querySelector("body").appendChild(line1);
     var line2 = document.createElement("p");
     line2.className = lineClass;
-    text2 = document.createTextNode(line.shift());
-    line2.appendChild(text2);
+    line2.innerHTML = line.shift();
     document.querySelector("body").appendChild(line2);
 }
 
@@ -120,13 +113,11 @@ function docT(line){
     var lineClass = line.shift();
     var line1 = document.createElement("h3");
     line1.className = lineClass;
-    text1 = document.createTextNode("Doctrinal Text");
-    line1.appendChild(text1);
+    line1.innerHTML = "Doctrinal Text";
     document.querySelector("body").appendChild(line1);
     var line2 = document.createElement("p");
     line2.className = lineClass;
-    text2 = document.createTextNode(line.shift());
-    line2.appendChild(text2);
+    line2.innerHTML = line.shift();
     document.querySelector("body").appendChild(line2);
 }
 
@@ -134,13 +125,11 @@ function prayer(line){
     var lineClass = line.shift();
     var line1 = document.createElement("h3");
     line1.className = lineClass;
-    text1 = document.createTextNode("Prayer");
-    line1.appendChild(text1);
+    line1.innerHTML = "Prayer";
     document.querySelector("body").appendChild(line1);
     var line2 = document.createElement("p");
     line2.className = lineClass;
-    text2 = document.createTextNode(line.shift());
-    line2.appendChild(text2);
+    line2.innerHTML = line.shift();
     document.querySelector("body").appendChild(line2);
 }
 
@@ -179,8 +168,8 @@ request.onload = function() {
     // This will be recalled after the "next" and/or "previous" buttons are clicked
     var data = request.response;
     dayDisplay(data[defaults.day]);
+    console.log("The current year is: " + defaults.year);
 
-    
     // This is creating the buttons and adding them to the HTML
     var div = document.createElement("div");
     var buttonPrevious = document.createElement("button");
@@ -238,21 +227,16 @@ request.onload = function() {
         } else {
             defaults.day += 1;
         }
-
         main(defaults.year);
-        this.outerHTML = this.outerHTML; //This is needed to "Reset"the body element to prevent every action from doubling every time its activated. 
     };
 
     // Defines the function to advance to the previous day entry
     function previous() {
-
         // What to do if the previous year is not 2016 and the previous year is not a leapyear
         if (defaults.day === 1 && !leapYears.includes((defaults.year - 1)) && defaults.year >= 2017){
-            // defaults.year = Number(defaults.year)
             defaults.year -= 1;
             defaults.day = 365;
         } else if (defaults.day === 1 && leapYears.includes((defaults.year - 1)) && defaults.year >= 2017){
-            // defaults.year = Number(defaults.year)
             defaults.year -= 1;
             defaults.day = 366; //defaults.year is a leap year
         } else if (defaults.day === 1 && defaults.year === 2016){  
@@ -261,48 +245,50 @@ request.onload = function() {
             defaults.day -= 1;
         }
         main(defaults.year); 
-        this.outerHTML = this.outerHTML; //This is needed to "Reset"the body element to prevent every action from doubling every time its activated. 
         };
-
-    document.getElementById('next').onclick = next;
-    document.getElementById('previous').onclick = previous;
-    document.body.addEventListener("keyup", function(event) {
-        if (event.code === "ArrowRight") {            
-            event.preventDefault();
-            this.outerHTML = this.outerHTML;
-            next();
-        } 
-        if (event.code === "ArrowLeft"){
-            event.preventDefault();
-            this.outerHTML = this.outerHTML;
-            previous();
-        }
-    });
-
-
-    document.getElementById("search").onclick = function () {
+    
+    // Defines the function to handle a search for a spicific day
+    function daySearch(){
+        var s = document.getElementById("search").focus();
         var x = document.getElementById("input")
         var searchInput = x.value;
         console.log("Here is what is returned from the date input : ");
         console.log(searchInput);
         var inputList = searchInput.split("-");
-        // console.log(inputList);
         defaults.year = Number(inputList[0]);
         console.log("The year after searching is : " + defaults.year);
-        
         var searchDay = new Date(defaults.year, (inputList[1] - 1), inputList[2]);
         var searchDayOfTheYear = Math.ceil((searchDay - new Date(inputList[0], 0, 0)) / 86400000);
-        // console.log("The searchDay value is : " + searchDay);
-        // console.log("The searchDayOfTheYear is : " + searchDayOfTheYear);
         defaults.day = searchDayOfTheYear;
         console.log("The defaults.day value after serching is : " + defaults.day);
         
-        main(defaults.year);        
-    };
+        main(defaults.year); 
+        };
+
+    document.getElementById('next').onclick = next;
+    document.getElementById('previous').onclick = previous;
+    document.getElementById("search").onclick = daySearch;
+
+    document.body.addEventListener("keyup", function(event) {
+        if (event.code === "ArrowRight") {            
+            event.preventDefault();
+            this.outerHTML = this.outerHTML; //This is needed to "Reset"the body element to prevent every action from doubling every time its activated. 
+            next();
+        } 
+        if (event.code === "ArrowLeft"){
+            event.preventDefault();
+            this.outerHTML = this.outerHTML; //This is needed to "Reset"the body element to prevent every action from doubling every time its activated. 
+            previous();
+        }
+        if (event.code === "Enter" || event.code === "NumpadEnter"){
+            event.preventDefault();
+            daySearch();
+        }
+    });
+
   
 };// onload()
     
 };// main()
 
-// Initial call of the main() function
 main(defaults.year);
