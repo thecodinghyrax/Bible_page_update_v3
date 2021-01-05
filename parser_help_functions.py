@@ -26,7 +26,7 @@ class SourceData:
 ####################### Working with full year data ###########################
     def create_new_year_dict(self):
         '''
-        Creates a new dictonary with an key for every day in the 
+        Creates a new dictonary with a key for every day in the 
         year_data list and a value of an empty list.
         '''
         year_dict = {}
@@ -128,7 +128,7 @@ class SourceData:
         '''
         Prints all day entries (which are list) that are of a certain length.
         If a great or less then modifer is passed before the number it will 
-        return that number + all > or < it's self.
+        return that number + all > or < itself.
         '''
         for line in self.year_data_lines:
             if mod == ">":
@@ -173,7 +173,7 @@ class SourceData:
     def show_day_and_verse_info(self):
         '''
         Searches the year_data and pulles out all date + verse lines.
-        It then check if any of those are too small are large and prints them.
+        Then it checks if any of those are too small are large and prints them.
         Finally it offers to print all lines found and returs all lines found. 
         '''
         date_line_found_list = []

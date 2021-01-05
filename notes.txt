@@ -1,49 +1,62 @@
-Structuring the text file:
+Structuring the original text file:
 All source files have to be utf-8 txt files
 All sources files need to be named <year>.txt
-All days have to be seperated by at least 2 spaces!
-All date + verse lines need to be on two seperat lines (date - verse \n verse; verse; verse)
-All named date + verse lines need to be on two seperate lines (name date + verse \n verse, verse, verse)
-If a verse has additional chapters or verses it should always be seperated by a command
+All days have to be separated by at least 2 spaces!
+All date + verse lines need to be on two separate lines (date - verse \n verse; verse; verse)
+All named date + verse lines need to be on two separate lines (name date + verse \n verse, verse, verse)
+If a verse has additional chapters or verses it should always be separated by a command
 
 
 Things to watch for:
-If you are seeing wierd extra lines when running "all" after all the parses, check for incorrect line endings (like they 
-split a prayer line for example, onto two seperate lines...for no reason)
+If you are seeing weird extra lines when running "all" after all the parses, check for incorrect line endings (like they 
+split a prayer line for example, onto two separate lines...for no reason)
 
 Sometimes there will be a ";" in place of a "," in the verses. You might catch this but running #3 !! Trust this. It's either long or wrong
 
-If a parse all crashes, try running each parsing setup with and "all" run inbetween. 
+If a parse all crashes, try running each parsing setup with and "all" run in between. 
 
 !!!*****   You must change the first line of the bible.js file every year you add and new year   *****!!!!!
 
 
 Structuring the JSON file:
 <year>.JSON
-{<day number>: {
-                "line1" : [<className(for css)>, <item1>, <item1>, ect],
-                "line2" : [<className(for css)>, <item1>, <item1>, ect],
-                "line3" : [<className(for css)>, <item1>, <item1>, ect],
-                }
+{<day number>: [
+                [<className(for css)>, <item1>, <item1>, ect],
+                [<className(for css)>, <item1>, <item1>, ect],
+                [<className(for css)>, <item1>, <item1>, ect],
+                ]
 },
 
 Example:
     2021.JSON
-    {"1" : {
-        "line1" : {"title", "John Hus Festival"},
-        "line2" : {"day", "Daily Text - Tuesday, July 6"},
-        "line3" : {"heading" : "Daily Scripture Lessions"},
-        "line4" : {"links" : ["Psalm 81:11-16", "Isaiah 24,25", "Ephesians 3:14,4:6"], // Will use a function to make these links
-        "line5" : {"heading" : "John Hus Festival"},
-        "line6" : {"links" : ["Isaiah 49:1-7", "Psalm 135:1-13"]}, // Will use a function to make these links
-        "line7" : {"heading" : "Watchword For the Day"},
-        "line8" : {"text" : "Seek the welfare of the city, and pray to the Lord on its behalf, for in its welfare you will find your welfare. Jeremiah 29:7"},
-        "line9" : {"heading" : "Doctrinal Text"},
-        "line10" : {"text" : "You are the salt of the earth. Matthew 5:13"},
-        "line11" : {"heading" : "Prayer"},
-        "line12" : {"text" : "Holy God, we thank you for the dedication of John Hus and his willingness to sacrifice even his life for the sake of truth. We thank you for his dedicated followers, who later formed the Moravian Church. Thanks be to God! Amen."}
-    },
-    "2" : { ect...},
-    }
-
-
+    "3": [
+        [
+            "info",
+            "Second Sunday after Christmas Day"
+        ],
+        [
+            "watchO",
+            "Watchword for the week \u2014 In him we have redemption through his blood, the forgiveness of our trespasses, according to the riches of his grace. Ephesians 1:7"
+        ],
+        [
+            "dateVerse",
+            "Sunday, January 3",
+            "Jeremiah 31:7-14",
+            "Psalm 147:12-20",
+            "Ephesians 1:3-14",
+            "John 1:(1-9),10-18"
+        ],
+        [
+            "watchD",
+            "If you offer your food to the hungry and satisfy the needs of the afflicted, then your light shall rise in the darkness. Isaiah 58:10"
+        ],
+        [
+            "docT",
+            "Be merciful, just as your Father is merciful. Luke 6:36"
+        ],
+        [
+            "prayer",
+            "Merciful Savior, we know that whatever we do to the least of these, we also do unto you. May we always embody the change you make in our lives by caring for those who cannot care for themselves. In remembrance of you. Amen."
+        ]
+    ],
+    "4": [ ect....]

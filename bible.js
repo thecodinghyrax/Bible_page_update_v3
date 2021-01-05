@@ -21,8 +21,8 @@ var defaults = {
 // This is the request function. This will pull in the data from github with a file name that
 // matches final<year>.json
 function getJsonFile(textYear){
-    // var requestURL = "https://raw.githubusercontent.com/CCCOG/gh-pages/master/" + textYear + ".json"
-    var requestURL = "https://raw.githubusercontent.com/thecodinghyrax/Bible_page_update_v3/major-change-for-index/" + textYear + ".json"
+    var requestURL = "https://raw.githubusercontent.com/CCCOG/gh-pages/master/" + textYear + ".json"
+    // var requestURL = "https://raw.githubusercontent.com/thecodinghyrax/Bible_page_update_v3/major-change-for-index/" + textYear + ".json"
     var request = new XMLHttpRequest();
     request.open('GET', requestURL)
     request.responseType = 'json';
@@ -164,8 +164,8 @@ var request = getJsonFile(mainYear);
 //This is where all the functions are called after the JSON is requested and loaded
 request.onload = function() {
     
-    // Main function handles all of the other function calls. 
-    // This will be recalled after the "next" and/or "previous" buttons are clicked
+    // Main function handles all other function calls. 
+    // This will be called after the "next", "previous"and/or "search" buttons are clicked
     var data = request.response;
     dayDisplay(data[defaults.day]);
     console.log("The current year is: " + defaults.year);
@@ -175,6 +175,7 @@ request.onload = function() {
     var buttonPrevious = document.createElement("button");
     buttonPrevious.setAttribute("id", "previous");
     buttonPrevious.innerHTML = "Previous";
+
     var buttonNext = document.createElement("button");
     buttonNext.setAttribute("id", "next");
     buttonNext.innerHTML = "Next";
@@ -186,7 +187,6 @@ request.onload = function() {
     var lastDayOfThisYear = new Date(finalYear, 11, 31).toISOString().substring(0, 10);
     inputField.setAttribute("max", lastDayOfThisYear);
 
-    //inputField.innerHTML = "Next";
     var searchButton = document.createElement("button");
     searchButton.setAttribute("id", "search");
     searchButton.innerHTML = "Search";
@@ -211,7 +211,7 @@ request.onload = function() {
         document.getElementById("next").style.visibility = "visible";
     };
     
-    // Defines the funtion to advance to the next day entry 
+    // Defines the function to advance to the next day entry 
     function next() {
         // What to do if its the last day of a non-leap year and not the current year
         if (defaults.day === 365 && defaults.year != year && !leapYears.includes(defaults.year)){
