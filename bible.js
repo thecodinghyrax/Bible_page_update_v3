@@ -1,4 +1,4 @@
-const finalYear = 2021 // Update this value after every new year is added !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+const finalYear = 2022 // Update this value after every new year is added !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const leapYears = [2016, 2020, 2024, 2028, 2032];
 
 
